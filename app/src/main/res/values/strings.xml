@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Whatsapp</string>
+    <string name="app_name">WhatsApp</string>
     <string name="verify_phone_number">Verifica tu número</string>
     <string name="whatsapp_will_send_a_sms">WhatsApp te enviará un SMS para verificar tu\nnúmero de teléfono. El operador móvil puede\naplicar cargos. Introduce tu código de país y\nnúmero de teléfono:</string>
     <string name="phone_number">número de teléfono</string>
@@ -10,4 +10,11 @@
     <string name="verify_code">Por favor verique que su token sea correcto</string>
     <string name="too_many_requests">Error, este dispositivo ha enviado muchas peticiones de token, intente más tarde.</string>
     <string name="invalid_credentials">Lo sentimos, tu número de teléfono o Token es invalido.</string>
+    <string name="search">Buscar</string>
+    <string name="sign_out">Salir</string>
+    <string name="settings">Ajustes</string>
+    <string name="new_group">Nuevo Grupo</string>
+    <string name="profile">Perfil</string>
+    <string name="profile_text">Esto no es un nombre de usuario ni un PIN.\nEste nombre será visible para tus contactos de\nWhatsApp.</string>
+    <string name="user_name">Nombre de Usuario</string>
 </resources>

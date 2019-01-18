@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/color_accent</item>
     </style>
 
+    <style name="ToolbarTheme" parent="Theme.AppCompat.NoActionBar"/>
+
+    <style name="NoPreview" parent="AppTheme">
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
 </resources>

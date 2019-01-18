@@ -21,7 +21,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/color_accent_dark"/>
+            android:textColor="@color/color_accent"/>
 
     <TextView
             android:text="@string/whatsapp_will_send_a_sms"
@@ -73,7 +73,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:backgroundTint="@color/color_accent"
+            android:backgroundTint="@color/color_accent_light"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:minHeight="56dp"
