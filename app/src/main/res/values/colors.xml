@@ -7,4 +7,5 @@
     <color name="primary_text">#F5383838</color>
     <color name="secondary_text">#757575</color>
     <color name="gray_background">#EEEEEE</color>
+    <color name="white_ripple">#1FFFFFFF</color>
 </resources>

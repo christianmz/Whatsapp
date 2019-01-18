@@ -17,4 +17,6 @@
     <string name="profile">Perfil</string>
     <string name="profile_text">Esto no es un nombre de usuario ni un PIN.\nEste nombre será visible para tus contactos de\nWhatsApp.</string>
     <string name="user_name">Nombre de Usuario</string>
+    <string name="chats">Chats</string>
+    <string name="contacts">Contactos</string>
 </resources>

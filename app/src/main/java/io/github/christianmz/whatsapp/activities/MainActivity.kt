@@ -2,12 +2,18 @@ package io.github.christianmz.whatsapp.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.view.Menu
 import android.view.MenuItem
 import io.github.christianmz.whatsapp.R
+import io.github.christianmz.whatsapp.adapters.PagerAdapter
 import io.github.christianmz.whatsapp.commons.mAuth
+import io.github.christianmz.whatsapp.fragments.ChatsFragment
+import io.github.christianmz.whatsapp.fragments.ContactsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.support.v4.onAdapterChange
+import org.jetbrains.anko.support.v4.onPageChangeListener
 import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        setUpViewPager(getPagerAdapter())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -31,5 +38,18 @@ class MainActivity : AppCompatActivity() {
             R.id.mn_sign_out -> mAuth.signOut()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun getPagerAdapter(): PagerAdapter {
+        val adapter = PagerAdapter(supportFragmentManager)
+        adapter.addFragment(ChatsFragment())
+        adapter.addFragment(ContactsFragment())
+        return adapter
+    }
+
+    private fun setUpViewPager(adapter: PagerAdapter){
+        view_pager.adapter = adapter
+        view_pager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tab_layout))
+        tab_layout.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(view_pager))
     }
 }
