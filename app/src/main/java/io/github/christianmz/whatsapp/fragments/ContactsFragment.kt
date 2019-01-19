@@ -11,12 +11,11 @@ import io.github.christianmz.whatsapp.R
 
 class ContactsFragment : Fragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private lateinit var _view: View
 
-        return inflater.inflate(R.layout.fragment_contacts, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _view = inflater.inflate(R.layout.fragment_contacts, container, false)
+
+        return _view
     }
-
 }
