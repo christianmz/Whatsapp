@@ -22,4 +22,9 @@
     <string name="permissions_denied">Permisos Denegado</string>
     <string name="ok">Aceptar</string>
     <string name="is_important_permissions">Es necesario aceptar estos permisos para poder acceder a esta funcionalidad</string>
+    <string name="profile_photo">Foto de perfil</string>
+    <string name="delete_photo">Eliminar</string>
+    <string name="camera">Cámara</string>
+    <string name="gallery">Galería</string>
+    <string name="error_upload_image">Hubo un error al subir la imagen al servidor, intente nuevamente,</string>
 </resources>

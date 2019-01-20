@@ -3,6 +3,8 @@ package io.github.christianmz.whatsapp.commons
 import android.app.Activity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -12,16 +14,28 @@ import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsList
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import io.github.christianmz.whatsapp.R
 
-
 /** Unique Instances **/
 
 val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+val mStorageRef: StorageReference = FirebaseStorage.getInstance().reference
 val mCollectionRef: FirebaseFirestore get() = FirebaseFirestore.getInstance()
+val mUID: String = mAuth.uid.toString()
+
+
+/** Constants **/
+
+const val REQUEST_IMAGE_CAPTURE = 100
+const val REQUEST_IMAGE_GALLERY = 200
+const val FILE_IMAGE = "images"
+const val FILE_PROFILE_IMAGES = "profile_images"
+const val NAME_PROFILE = "profile.jpeg"
 
 
 /** Request permissions at runtime. **/
 
-fun mRequestPermissions(activity: Activity) {
+fun mRequestPermissions(activity: Activity): Boolean {
+
+    var isPermissionsGranted = false
 
     val dialog = DialogOnAnyDeniedMultiplePermissionsListener
         .Builder.withContext(activity)
@@ -35,6 +49,7 @@ fun mRequestPermissions(activity: Activity) {
         override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
             report?.let {
                 if (report.areAllPermissionsGranted()) {
+                    isPermissionsGranted = true
                 }
             }
         }
@@ -56,4 +71,6 @@ fun mRequestPermissions(activity: Activity) {
         )
         .withListener(composite)
         .check()
+
+    return isPermissionsGranted
 }

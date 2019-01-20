@@ -8,4 +8,7 @@
     <color name="secondary_text">#757575</color>
     <color name="gray_background">#EEEEEE</color>
     <color name="white_ripple">#1FFFFFFF</color>
+    <color name="red_button">#E53935</color>
+    <color name="purple_button">#5E35B1</color>
+    <color name="orange_button">#FB8C00</color>
 </resources>
