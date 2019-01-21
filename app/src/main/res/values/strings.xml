@@ -27,4 +27,6 @@
     <string name="camera">Cámara</string>
     <string name="gallery">Galería</string>
     <string name="error_upload_image">Hubo un error al subir la imagen al servidor, intente nuevamente,</string>
+    <string name="update_name">Su nombre de perfil ha sido actualizado</string>
+    <string name="delete_error">Hubo un error al eliminar la foto.</string>
 </resources>

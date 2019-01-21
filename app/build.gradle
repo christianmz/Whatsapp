@@ -36,6 +36,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.firebase:firebase-firestore:17.1.5'
     implementation 'com.google.firebase:firebase-storage:16.0.5'
+    implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
 
     implementation 'com.karumi:dexter:5.0.0'
     implementation 'org.jetbrains.anko:anko:0.10.8'

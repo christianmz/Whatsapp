@@ -54,9 +54,9 @@
         <EditText
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapSentences"
                 android:ems="10"
-                android:id="@+id/et_profile"
+                android:id="@+id/et_name_profile"
                 android:layout_weight="9"
                 android:background="@android:color/transparent"
                 android:hint="@string/user_name"
@@ -67,7 +67,7 @@
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 app:srcCompat="@drawable/ic_edit"
-                android:id="@+id/imageView"
+                android:id="@+id/ib_edit_name"
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:contentDescription="@string/app_name"/>

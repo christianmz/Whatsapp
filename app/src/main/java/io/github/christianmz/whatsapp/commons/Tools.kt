@@ -19,6 +19,7 @@ import io.github.christianmz.whatsapp.R
 val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 val mStorageRef: StorageReference = FirebaseStorage.getInstance().reference
 val mCollectionRef: FirebaseFirestore get() = FirebaseFirestore.getInstance()
+val mUser = mAuth.currentUser
 val mUID: String = mAuth.uid.toString()
 
 
@@ -28,7 +29,6 @@ const val REQUEST_IMAGE_CAPTURE = 100
 const val REQUEST_IMAGE_GALLERY = 200
 const val FILE_IMAGE = "images"
 const val FILE_PROFILE_IMAGES = "profile_images"
-const val NAME_PROFILE = "profile.jpeg"
 
 
 /** Request permissions at runtime. **/
