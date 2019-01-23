@@ -3,38 +3,45 @@ package io.github.christianmz.whatsapp.activities
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
-import android.widget.EditText
 import com.bumptech.glide.Glide
 import io.github.christianmz.whatsapp.R
 import io.github.christianmz.whatsapp.commons.*
 import io.github.christianmz.whatsapp.objects.FirePath
 import io.github.christianmz.whatsapp.objects.User
+import kotlinx.android.synthetic.main.activity_new_user.*
 import kotlinx.android.synthetic.main.activity_profile.*
 import org.jetbrains.anko.longToast
+import org.jetbrains.anko.startActivity
 import java.io.File
 import java.io.IOException
 
-class ProfileActivity : AppCompatActivity() {
+class NewUserActivity : AppCompatActivity() {
+
+    private val nameUser by lazy { et_new_user_name.text.toString() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
-
-        setSupportActionBar(toolbar_profile)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setContentView(R.layout.activity_new_user)
 
         setUserInfo()
 
-        ib_edit_name.setOnClickListener { setUpAlertEditName() }
-        iv_user_photo.setOnClickListener { openGallery() }
-        fab_photo_profile.setOnClickListener { if (isAllPermissionsGranted(this)) setUpAlertChangeImage() }
+        iv_new_user_photo.setOnClickListener { if (isAllPermissionsGranted(this)) setUpAlertChoseImage() }
+
+        btn_next_new_user.setOnClickListener {
+            if (nameUser.isNotEmpty()) {
+                saveUser()
+                startActivity<MainActivity>()
+            } else {
+                longToast(R.string.please_add_your_name)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -57,7 +64,7 @@ class ProfileActivity : AppCompatActivity() {
                     }
                 }
 
-                if (image != null) iv_user_photo.setImageBitmap(image)
+                if (image != null) iv_new_user_photo.setImageBitmap(image)
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -67,22 +74,38 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setUserInfo() {
 
-        tv_name_user.text = User.name
-        tv_phone_number.text = User.phoneNumber
+        User.name?.let { et_new_user_name.setText(User.name) }
 
         if (User.photoUrl != null) {
-            Glide.with(this).load(User.photoUrl).into(iv_user_photo)
+            Glide.with(this).load(User.photoUrl).into(iv_new_user_photo)
         } else {
-            Glide.with(this).load(R.drawable.placeholder_profile).into(iv_user_photo)
+            Glide.with(this).load(R.drawable.placeholder_profile).into(iv_new_user_photo)
         }
     }
 
-    private fun setUpAlertChangeImage() {
+    private fun saveUser() {
 
-        val selectView = LayoutInflater.from(this).inflate(R.layout.alert_change_image, null)
-        val galleryButton: FloatingActionButton = selectView.findViewById(R.id.fab_gallery_change)
-        val cameraButton: FloatingActionButton = selectView.findViewById(R.id.fab_camera_change)
-        val deleteButton: FloatingActionButton = selectView.findViewById(R.id.fab_delete)
+        val newUser = HashMap<String, Any>()
+
+        newUser[USER_UID] = User.uid
+        newUser[USER_PHONE_NUMBER] = intent.getStringExtra("phone_number")
+        newUser[USER_NAME] = User.updateName(nameUser)
+        newUser[USER_PROFILE_IMAGE_URL] = User.updatePhoto(addPictureToGallery(this))
+
+        FirePath.refUsers.set(newUser)
+            .addOnCompleteListener {
+            }.addOnFailureListener {
+                longToast(R.string.error_create_user)
+                startActivity<LoginActivity>()
+                finish()
+            }
+    }
+
+    private fun setUpAlertChoseImage() {
+
+        val selectView = LayoutInflater.from(this).inflate(R.layout.alert_select_image, null)
+        val galleryButton: FloatingActionButton = selectView.findViewById(R.id.fab_gallery_select)
+        val cameraButton: FloatingActionButton = selectView.findViewById(R.id.fab_camera_select)
 
         AlertDialog
             .Builder(this)
@@ -92,28 +115,6 @@ class ProfileActivity : AppCompatActivity() {
 
         galleryButton.setOnClickListener { openGallery() }
         cameraButton.setOnClickListener { openCamera() }
-        deleteButton.setOnClickListener { deleteImage() }
-    }
-
-    private fun setUpAlertEditName() {
-
-        val layoutAlert = LayoutInflater.from(this).inflate(R.layout.alert_edit_name, null)
-
-        AlertDialog
-            .Builder(this)
-            .setTitle(R.string.edit_your_name)
-            .setView(layoutAlert)
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                val editTextName: EditText = layoutAlert.findViewById(R.id.et_name_profile)
-                val newUserName = editTextName.text.toString()
-
-                User.updateName(newUserName)
-                tv_name_user.text = newUserName
-
-                longToast(R.string.update_name)
-            }
-            .create()
-            .show()
     }
 
     private fun openGallery() {
@@ -145,15 +146,5 @@ class ProfileActivity : AppCompatActivity() {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
         }
-    }
-
-    private fun deleteImage() {
-
-        FirePath.refProfileImage.delete()
-            .addOnSuccessListener {
-                Glide.with(this).load(R.drawable.placeholder_profile).into(iv_user_photo)
-            }.addOnFailureListener {
-                longToast(R.string.delete_error)
-            }
     }
 }

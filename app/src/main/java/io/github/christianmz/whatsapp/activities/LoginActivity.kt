@@ -8,10 +8,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import io.github.christianmz.whatsapp.R
-import io.github.christianmz.whatsapp.commons.mAuth
+import io.github.christianmz.whatsapp.objects.FireInstance
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
@@ -28,12 +29,15 @@ class LoginActivity : AppCompatActivity() {
             when {
                 phoneNumber.isNotEmpty() -> verifyPhoneNumber()
                 phoneNumber.isEmpty() -> longToast(R.string.add_phone_number)
-                phoneNumber.isNotEmpty() && verificationCode.isNotEmpty() -> signInWithCredential(
-                    PhoneAuthProvider.getCredential(
-                        mVerificationId.toString(),
-                        verificationCode
+                phoneNumber.isNotEmpty() && verificationCode.isNotEmpty() -> {
+                    longToast(R.string.wait_code)
+                    signInWithCredential(
+                        PhoneAuthProvider.getCredential(
+                            mVerificationId.toString(),
+                            verificationCode
+                        )
                     )
-                )
+                }
                 else -> longToast(R.string.verify_code)
             }
         }
@@ -73,10 +77,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signInWithCredential(phoneAuthCredential: PhoneAuthCredential) {
-        mAuth.signInWithCredential(phoneAuthCredential)
+        FireInstance.mAuth.signInWithCredential(phoneAuthCredential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    startActivity<MainActivity>()
+                    startActivity<NewUserActivity>("phone_number" to phoneNumber)
                 }
             }
     }

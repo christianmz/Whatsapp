@@ -2,11 +2,11 @@
     <string name="app_name">WhatsApp</string>
     <string name="verify_phone_number">Verifica tu número</string>
     <string name="whatsapp_will_send_a_sms">WhatsApp te enviará un SMS para verificar tu\nnúmero de teléfono. El operador móvil puede\naplicar cargos. Introduce tu código de país y\nnúmero de teléfono:</string>
-    <string name="phone_number">número de teléfono</string>
-    <string name="code">código de verificación</string>
+    <string name="phone_number">Número de teléfono</string>
+    <string name="code">Código de verificación</string>
     <string name="next">Siguiente</string>
     <string name="add_phone_number">Por favor agrega un número de teléfono</string>
-    <string name="time_out">El token enviado ha expirado</string>
+    <string name="time_out">El token enviado ha expirado, espere unos minutos y vuelva a intentarlo</string>
     <string name="verify_code">Por favor verique que su token sea correcto</string>
     <string name="too_many_requests">Error, este dispositivo ha enviado muchas peticiones de token, intente más tarde.</string>
     <string name="invalid_credentials">Lo sentimos, tu número de teléfono o Token es invalido.</string>
@@ -29,4 +29,12 @@
     <string name="error_upload_image">Hubo un error al subir la imagen al servidor, intente nuevamente,</string>
     <string name="update_name">Su nombre de perfil ha sido actualizado</string>
     <string name="delete_error">Hubo un error al eliminar la foto.</string>
+    <string name="info_and_phone_number">Info. y número de teléfono</string>
+    <string name="write_your_name">Escribe tu nombre</string>
+    <string name="edit_your_name">Edita tu nombre de perfil</string>
+    <string name="info_profile">Info. de perfil</string>
+    <string name="please_add_a_name">Por favor, introduce tu nombre y una foto\n(opcional)</string>
+    <string name="please_add_your_name">Por favor agrega tu nombre</string>
+    <string name="wait_code">Código de verificación enviado</string>
+    <string name="error_create_user">Hubo un error al crear esta cuenta, vuelve a intentarlo.</string>
 </resources>

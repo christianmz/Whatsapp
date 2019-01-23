@@ -17,7 +17,6 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-
         <activity
                 android:name=".commons.MainEmpty"
                 android:theme="@android:style/Theme.NoDisplay">
@@ -30,6 +29,11 @@
 
         <activity
                 android:name=".activities.LoginActivity"
+                android:windowSoftInputMode="adjustResize">
+        </activity>
+
+        <activity
+                android:name=".activities.NewUserActivity"
                 android:windowSoftInputMode="adjustResize">
         </activity>
 
@@ -50,7 +54,7 @@
                 android:grantUriPermissions="true">
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/file_paths" />
+                    android:resource="@xml/file_paths"/>
         </provider>
     </application>
 

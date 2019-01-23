@@ -23,7 +23,7 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/iv_profile"
+            android:id="@+id/iv_user_photo"
             android:layout_width="180dp"
             android:layout_height="180dp"
             app:civ_border_width="0dp"
@@ -49,19 +49,17 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:layout_marginTop="32dp"
-            app:layout_constraintTop_toBottomOf="@+id/iv_profile">
+            app:layout_constraintTop_toBottomOf="@+id/iv_user_photo">
 
-        <EditText
+        <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:inputType="textPersonName|textCapSentences"
-                android:ems="10"
-                android:id="@+id/et_name_profile"
+                android:id="@+id/tv_name_user"
                 android:layout_weight="9"
-                android:background="@android:color/transparent"
-                android:hint="@string/user_name"
-                android:importantForAutofill="no"
-                tools:targetApi="o"/>
+                tools:text="Christian Meazza"
+                android:textSize="18sp"
+                android:textColor="@color/primary_text"
+                android:gravity="center_vertical"/>
 
         <ImageView
                 android:layout_width="0dp"
@@ -93,12 +91,50 @@
             android:clickable="true"
             app:srcCompat="@drawable/ic_camera"
             android:id="@+id/fab_photo_profile"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_profile"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_user_photo"
             android:layout_marginEnd="1dp"
             android:layout_marginBottom="1dp"
-            app:layout_constraintEnd_toEndOf="@+id/iv_profile"
+            app:layout_constraintEnd_toEndOf="@+id/iv_user_photo"
             app:backgroundTint="@color/color_accent"
             app:fabSize="normal"
             android:focusable="true"/>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout"
+            android:background="@android:color/white"
+            android:elevation="1dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp">
+
+        <TextView
+                android:text="@string/info_and_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView6"
+                android:layout_weight="1"
+                android:textColor="@color/color_accent"
+                android:textSize="16sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_phone_number"
+                android:layout_weight="1"
+                tools:text="+57 301 6430690"
+                android:textSize="18sp"
+                android:textColor="@color/primary_text"
+                android:paddingBottom="16dp"
+                android:paddingTop="8dp"/>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
