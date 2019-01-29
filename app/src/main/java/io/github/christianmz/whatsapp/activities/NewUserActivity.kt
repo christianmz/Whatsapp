@@ -3,43 +3,52 @@ package io.github.christianmz.whatsapp.activities
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.support.v7.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
-import com.bumptech.glide.Glide
 import io.github.christianmz.whatsapp.R
 import io.github.christianmz.whatsapp.commons.*
+import io.github.christianmz.whatsapp.models.User
+import io.github.christianmz.whatsapp.objects.FireInstance
 import io.github.christianmz.whatsapp.objects.FirePath
-import io.github.christianmz.whatsapp.objects.User
 import kotlinx.android.synthetic.main.activity_new_user.*
-import kotlinx.android.synthetic.main.activity_profile.*
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 
 class NewUserActivity : AppCompatActivity() {
 
     private val nameUser by lazy { et_new_user_name.text.toString() }
+    private val mPhotoSelectedUri by lazy { addPictureToGallery(this) }
+    private val phoneNumber by lazy { intent.getStringExtra(USER_PHONE_NUMBER) }
+
+    private var photoUrl: Uri? = null
+    private lateinit var newUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_user)
 
-        setUserInfo()
-
         iv_new_user_photo.setOnClickListener { if (isAllPermissionsGranted(this)) setUpAlertChoseImage() }
 
         btn_next_new_user.setOnClickListener {
-            if (nameUser.isNotEmpty()) {
-                saveUser()
-                startActivity<MainActivity>()
-            } else {
-                longToast(R.string.please_add_your_name)
+            when {
+                nameUser.isEmpty() -> longToast(R.string.please_add_your_name)
+                photoUrl == null -> longToast(R.string.please_add_a_image)
+                photoUrl == null && nameUser.isEmpty() -> longToast(R.string.please_add_your_info)
+                photoUrl != null && nameUser.isNotEmpty() -> {
+                    newUser = User(FireInstance.mUid.toString(), nameUser, phoneNumber, photoUrl.toString())
+                    newUser.saveUser()
+                    FireInstance.updateName(nameUser)
+                    startActivity<MainActivity>(USER_NAME to nameUser)
+                }
             }
         }
     }
@@ -55,12 +64,11 @@ class NewUserActivity : AppCompatActivity() {
                 when (requestCode) {
                     REQUEST_IMAGE_GALLERY -> {
                         image = MediaStore.Images.Media.getBitmap(contentResolver, data?.data)
-                        User.uploadImageFromGallery(image, this)
+                        uploadImageFromGallery(image)
                     }
                     REQUEST_IMAGE_CAPTURE -> {
-                        val mPhotoSelectedUri = addPictureToGallery(this)
-                        image = MediaStore.Images.Media.getBitmap(this.contentResolver, mPhotoSelectedUri)
-                        User.uploadImageFromCamera(mPhotoSelectedUri, this)
+                        image = MediaStore.Images.Media.getBitmap(contentResolver, mPhotoSelectedUri)
+                        uploadImageFromCamera(mPhotoSelectedUri)
                     }
                 }
 
@@ -70,35 +78,6 @@ class NewUserActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
-    }
-
-    private fun setUserInfo() {
-
-        User.name?.let { et_new_user_name.setText(User.name) }
-
-        if (User.photoUrl != null) {
-            Glide.with(this).load(User.photoUrl).into(iv_new_user_photo)
-        } else {
-            Glide.with(this).load(R.drawable.placeholder_profile).into(iv_new_user_photo)
-        }
-    }
-
-    private fun saveUser() {
-
-        val newUser = HashMap<String, Any>()
-
-        newUser[USER_UID] = User.uid
-        newUser[USER_PHONE_NUMBER] = intent.getStringExtra("phone_number")
-        newUser[USER_NAME] = User.updateName(nameUser)
-        newUser[USER_PROFILE_IMAGE_URL] = User.updatePhoto(addPictureToGallery(this))
-
-        FirePath.refUsers.set(newUser)
-            .addOnCompleteListener {
-            }.addOnFailureListener {
-                longToast(R.string.error_create_user)
-                startActivity<LoginActivity>()
-                finish()
-            }
     }
 
     private fun setUpAlertChoseImage() {
@@ -146,5 +125,37 @@ class NewUserActivity : AppCompatActivity() {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
         }
+    }
+
+    private fun uploadImageFromGallery(image: Bitmap) {
+
+        val imageData: ByteArray
+        val baos = ByteArrayOutputStream()
+
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        imageData = baos.toByteArray()
+
+        FirePath.refProfileImage.putBytes(imageData)
+            .addOnSuccessListener { TaskSnapshot ->
+                TaskSnapshot.storage.downloadUrl.addOnSuccessListener {
+                    photoUrl = it
+                    FireInstance.updatePhoto(photoUrl!!)
+                }
+            }.addOnFailureListener {
+                longToast(R.string.error_upload_image)
+            }
+    }
+
+    private fun uploadImageFromCamera(uri: Uri) {
+
+        FirePath.refProfileImage.putFile(uri)
+            .addOnSuccessListener { TaskSnapshot ->
+                TaskSnapshot.storage.downloadUrl.addOnSuccessListener {
+                    photoUrl = it
+                    FireInstance.updatePhoto(photoUrl!!)
+                }
+            }.addOnFailureListener {
+                longToast(R.string.error_upload_image)
+            }
     }
 }

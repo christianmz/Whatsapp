@@ -10,6 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Contacts"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:id="@+id/tv_contacts"/>
 
 </FrameLayout>

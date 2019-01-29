@@ -7,6 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import io.github.christianmz.whatsapp.R
 import io.github.christianmz.whatsapp.adapters.PagerAdapter
+import io.github.christianmz.whatsapp.commons.USER_NAME
+import io.github.christianmz.whatsapp.commons.USER_PHONE_NUMBER
 import io.github.christianmz.whatsapp.fragments.ChatsFragment
 import io.github.christianmz.whatsapp.fragments.ContactsFragment
 import io.github.christianmz.whatsapp.objects.FireInstance

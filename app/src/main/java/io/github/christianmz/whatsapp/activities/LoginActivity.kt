@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import io.github.christianmz.whatsapp.R
+import io.github.christianmz.whatsapp.commons.USER_PHONE_NUMBER
 import io.github.christianmz.whatsapp.objects.FireInstance
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.longToast
@@ -80,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
         FireInstance.mAuth.signInWithCredential(phoneAuthCredential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    startActivity<NewUserActivity>("phone_number" to phoneNumber)
+                    startActivity<NewUserActivity>(USER_PHONE_NUMBER to phoneNumber)
                 }
             }
     }

@@ -3,8 +3,10 @@ package io.github.christianmz.whatsapp.commons
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
+import android.widget.Toast
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -13,8 +15,10 @@ import com.karumi.dexter.listener.multi.CompositeMultiplePermissionsListener
 import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import io.github.christianmz.whatsapp.R
+import io.github.christianmz.whatsapp.objects.FireInstance
+import io.github.christianmz.whatsapp.objects.FirePath
+import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,7 +30,6 @@ const val REQUEST_IMAGE_GALLERY = 200
 const val FILE_IMAGE = "images"
 const val FILE_PROFILE_IMAGES = "profile_images"
 const val COLLECTION_USERS = "users"
-const val USER_UID = "uid"
 const val USER_PHONE_NUMBER = "phone_number"
 const val USER_NAME = "name"
 const val USER_PROFILE_IMAGE_URL = "image_url"
@@ -79,34 +82,24 @@ fun isAllPermissionsGranted(activity: Activity): Boolean {
 
 /** Create a photo file from camera **/
 
-private var mCurrentPath: String = ""
-
-fun createImageFile(context: Context): File? {
+fun createImageFile(context: Context): File {
 
     val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ROOT).format(Date())
     val imageFileName = "JPEG${timeStamp}_"
     val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-    var image: File? = null
 
-    try {
-        image = File.createTempFile(imageFileName, ".jpg", storageDir)
-        mCurrentPath = image.absolutePath
-    } catch (e: IOException) {
-        e.printStackTrace()
-    }
-
-    return image
+    return File.createTempFile(imageFileName, ".jpg", storageDir)
 }
 
 fun addPictureToGallery(context: Context): Uri {
 
+    val mCurrentPath = createImageFile(context).absolutePath
     val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
     val newFile = File(mCurrentPath)
     val contentUri = Uri.fromFile(newFile)
 
     mediaScanIntent.data = contentUri
     context.sendBroadcast(mediaScanIntent)
-    mCurrentPath = ""
 
     return contentUri
 }

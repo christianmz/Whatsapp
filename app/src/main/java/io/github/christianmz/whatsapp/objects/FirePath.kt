@@ -7,7 +7,7 @@ import io.github.christianmz.whatsapp.commons.FILE_PROFILE_IMAGES
 object FirePath {
 
     val refProfileImage =
-        FireInstance.mStorageRef.child(FILE_IMAGE).child(FILE_PROFILE_IMAGES).child("${User.uid}.jpeg")
+        FireInstance.mStorageRef.child(FILE_IMAGE).child(FILE_PROFILE_IMAGES).child("${FireInstance.mUid}.jpeg")
 
-    val refUsers = FireInstance.mFirestoreRef.collection(COLLECTION_USERS).document(User.uid)
+    val refUsers = FireInstance.mFirestoreRef.collection(COLLECTION_USERS)
 }

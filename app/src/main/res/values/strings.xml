@@ -37,4 +37,6 @@
     <string name="please_add_your_name">Por favor agrega tu nombre</string>
     <string name="wait_code">Código de verificación enviado</string>
     <string name="error_create_user">Hubo un error al crear esta cuenta, vuelve a intentarlo.</string>
+    <string name="please_add_a_image">Por favor agrega una imagen de perfil</string>
+    <string name="please_add_your_info">Por favor agrega un nombre y una imagen de perfil</string>
 </resources>

@@ -1,8 +1,10 @@
 package io.github.christianmz.whatsapp.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.design.widget.FloatingActionButton
@@ -11,17 +13,23 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.widget.EditText
+import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.firestore.DocumentSnapshot
 import io.github.christianmz.whatsapp.R
 import io.github.christianmz.whatsapp.commons.*
+import io.github.christianmz.whatsapp.objects.FireInstance
 import io.github.christianmz.whatsapp.objects.FirePath
-import io.github.christianmz.whatsapp.objects.User
 import kotlinx.android.synthetic.main.activity_profile.*
 import org.jetbrains.anko.longToast
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 
 class ProfileActivity : AppCompatActivity() {
+
+    private val mPhotoSelectedUri by lazy { addPictureToGallery(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +56,11 @@ class ProfileActivity : AppCompatActivity() {
                 when (requestCode) {
                     REQUEST_IMAGE_GALLERY -> {
                         image = MediaStore.Images.Media.getBitmap(contentResolver, data?.data)
-                        User.uploadImageFromGallery(image, this)
+                        uploadImageFromGallery(image)
                     }
                     REQUEST_IMAGE_CAPTURE -> {
-                        val mPhotoSelectedUri = addPictureToGallery(this)
-                        image = MediaStore.Images.Media.getBitmap(this.contentResolver, mPhotoSelectedUri)
-                        User.uploadImageFromCamera(mPhotoSelectedUri, this)
+                        image = MediaStore.Images.Media.getBitmap(contentResolver, mPhotoSelectedUri)
+                        uploadImageFromCamera(mPhotoSelectedUri)
                     }
                 }
 
@@ -67,11 +74,11 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setUserInfo() {
 
-        tv_name_user.text = User.name
-        tv_phone_number.text = User.phoneNumber
+        tv_name_user.text = FireInstance.mNameUser
+        tv_phone_number.text = FireInstance.mPhoneNumber
 
-        if (User.photoUrl != null) {
-            Glide.with(this).load(User.photoUrl).into(iv_user_photo)
+        if (FireInstance.mPhotoUrl != null) {
+            Glide.with(this).load(FireInstance.mPhotoUrl).into(iv_user_photo)
         } else {
             Glide.with(this).load(R.drawable.placeholder_profile).into(iv_user_photo)
         }
@@ -107,7 +114,7 @@ class ProfileActivity : AppCompatActivity() {
                 val editTextName: EditText = layoutAlert.findViewById(R.id.et_name_profile)
                 val newUserName = editTextName.text.toString()
 
-                User.updateName(newUserName)
+                FireInstance.updateName(newUserName)
                 tv_name_user.text = newUserName
 
                 longToast(R.string.update_name)
@@ -154,6 +161,36 @@ class ProfileActivity : AppCompatActivity() {
                 Glide.with(this).load(R.drawable.placeholder_profile).into(iv_user_photo)
             }.addOnFailureListener {
                 longToast(R.string.delete_error)
+            }
+    }
+
+    private fun uploadImageFromGallery(image: Bitmap) {
+
+        val imageData: ByteArray
+        val baos = ByteArrayOutputStream()
+
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        imageData = baos.toByteArray()
+
+        FirePath.refProfileImage.putBytes(imageData)
+            .addOnSuccessListener { TaskSnapshot ->
+                TaskSnapshot.storage.downloadUrl.addOnSuccessListener {
+                    FireInstance.updatePhoto(it)
+                }
+            }.addOnFailureListener {
+                longToast(R.string.error_upload_image)
+            }
+    }
+
+    private fun uploadImageFromCamera(uri: Uri) {
+
+        FirePath.refProfileImage.putFile(uri)
+            .addOnSuccessListener { TaskSnapshot ->
+                TaskSnapshot.storage.downloadUrl.addOnSuccessListener {
+                    FireInstance.updatePhoto(it)
+                }
+            }.addOnFailureListener {
+                longToast(R.string.error_upload_image)
             }
     }
 }
